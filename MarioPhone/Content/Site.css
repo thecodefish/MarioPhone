@@ -59,3 +59,14 @@ textarea {
 .validation-summary-valid {
     display: none;
 }
+
+
+.button {
+
+    border: 1px solid red;
+    border-radius: 5px;
+    text-align: center;
+    padding: 15px;
+    float: left;
+    margin-right: 20px;
+}
