@@ -1,176 +1,207 @@
 ﻿@{
-    ViewBag.Title = "Index";
+	ViewBag.Title = "Index";
 }
 
-<div>
-    <div id="leftButton" class="button">left</div>
-    <div id="jumpButton" class="button">jump</div>
-    <div id="rightButton" class="button">right</div>
-</div>
-<div id="enterButton" class="button">enter</div>
+<table>
+	<tr>
+		<td></td>
+		<td><div id="upButton" class="button short">up</div></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td><div id="leftButton" class="button">left</div></td>
+		<td><div id="jumpButton" class="button">jump/enter</div></td>
+		<td><div id="rightButton" class="button">right</div></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td><div id="downButton" class="button short">down</div></td>
+		<td></td>
+	</tr>
+</table>
 
 @*<div style="clear: both">
-    
-    <button type="button" onclick="startCapture()">start</button>
-    <button type="button" onclick="stopCapture()">stop</button>
+	
+	<button type="button" onclick="startCapture()">start</button>
+	<button type="button" onclick="stopCapture()">stop</button>
 
-    <input type="text" id="msg" />
-    <input type="button" id="broadcast" value="broadcast" />
+	<input type="text" id="msg" />
+	<input type="button" id="broadcast" value="broadcast" />
 
-    <ul id="messages">
-    </ul>
+	<ul id="messages">
+	</ul>
 </div>*@
 
 
 
 @section scripts
 {
-    <script type="text/javascript">
+	<script type="text/javascript">
 
-        var capturing = false;
+		var capturing = false;
 
-        function startCapture() {
-            capturing = true;
-        }
+		function startCapture() {
+			capturing = true;
+		}
 
-        function stopCapture() {
-            capturing = false;
-        }
+		function stopCapture() {
+			capturing = false;
+		}
 
-        var tiltingRight = false;
-        var tiltingLeft = false;
+		//var tiltingRight = false;
+		//var tiltingLeft = false;
 
-        function handleOrientationChange(e) {
-            if (!capturing) {
-                return;
-            }
-            
-            
-            if (e.gamma > 50 && e.gamma < 180) {
-                if (!tiltingRight) {
-                    chat.server.send('tilt right');
-                }
-                tiltingRight = true;
-            }
-            else if (tiltingRight) {
-                chat.server.send('stop tilting right');
-                tiltingRight = false;
-            }
-            
-            if (e.gamma < -50 && e.gamma > -180) {
-                if (!tiltingLeft) {
-                    chat.server.send('tilt left');
-                }
-                tiltingLeft = true;
-            } else if (tiltingLeft) {
-                chat.server.send('stop tilting left');
-                tiltingLeft = false;
-            }
+		//function handleOrientationChange(e) {
+		//	if (!capturing) {
+		//		return;
+		//	}
+			
+			
+		//	if (e.gamma > 50 && e.gamma < 180) {
+		//		if (!tiltingRight) {
+		//			chat.server.send('tilt right');
+		//		}
+		//		tiltingRight = true;
+		//	}
+		//	else if (tiltingRight) {
+		//		chat.server.send('stop tilting right');
+		//		tiltingRight = false;
+		//	}
+			
+		//	if (e.gamma < -50 && e.gamma > -180) {
+		//		if (!tiltingLeft) {
+		//			chat.server.send('tilt left');
+		//		}
+		//		tiltingLeft = true;
+		//	} else if (tiltingLeft) {
+		//		chat.server.send('stop tilting left');
+		//		tiltingLeft = false;
+		//	}
 
-            //chat.server.send('a: ' + deltaAlpha + ', b: ' + deltaBeta + ', g: ' + deltaGamma);
-        }
+		//	//chat.server.send('a: ' + deltaAlpha + ', b: ' + deltaBeta + ', g: ' + deltaGamma);
+		//}
 
-        var currentVerticalAcceleration = 0;
-        var lastVerticalAcceleration = 0;
-        
-        function handleDeviceMotion(e) {
-            if (!capturing) {
-                return;
-            }
+		//var currentVerticalAcceleration = 0;
+		//var lastVerticalAcceleration = 0;
+		
+		//function handleDeviceMotion(e) {
+		//	if (!capturing) {
+		//		return;
+		//	}
 
-            currentVerticalAcceleration = e.acceleration.y;
+		//	currentVerticalAcceleration = e.acceleration.y;
 
-            //var acceleration = e.acceleration;
+		//	//var acceleration = e.acceleration;
 
-            //// Display the raw acceleration data
-            //var rawAcceleration = "[" + Math.round(acceleration.x) + ", " +
-            //  Math.round(acceleration.y) + ", " + Math.round(acceleration.z) + "]";
+		//	//// Display the raw acceleration data
+		//	//var rawAcceleration = "[" + Math.round(acceleration.x) + ", " +
+		//	//  Math.round(acceleration.y) + ", " + Math.round(acceleration.z) + "]";
 
-            //chat.server.send('acceleration: ' + rawAcceleration);
-        }
-        
-        function checkVerticalAcceleration() {
-            if (currentVerticalAcceleration - lastVerticalAcceleration > 10) {
-                chat.server.send('bump!');
-            }
-            
-            lastVerticalAcceleration = currentVerticalAcceleration;
-        }
+		//	//chat.server.send('acceleration: ' + rawAcceleration);
+		//}
+		
+		//function checkVerticalAcceleration() {
+		//	if (currentVerticalAcceleration - lastVerticalAcceleration > 10) {
+		//		chat.server.send('bump!');
+		//	}
+			
+		//	lastVerticalAcceleration = currentVerticalAcceleration;
+		//}
 
-        var chat;
+		var chat;
 
-        $(function() {
-            // Proxy created on the fly          
-            chat = $.connection.chat;
+		$(function() {
+			// Proxy created on the fly          
+			chat = $.connection.chat;
 
-            // Declare a function on the chat hub so the server can invoke it          
-            chat.client.addMessage = function(message) {
-                //$('#messages').append('<li>' + message + '</li>');
-            };
+			// Declare a function on the chat hub so the server can invoke it          
+			chat.client.addMessage = function(message) {
+				//$('#messages').append('<li>' + message + '</li>');
+			};
 
-            // Start the connection
-            $.connection.hub.start().done(function() {
-                $("#broadcast").click(function() {
-                    // Call the chat method on the server
-                    chat.server.send($('#msg').val());
-                });
-            });
+			// Start the connection
+			$.connection.hub.start().done(function() {
+				$("#broadcast").click(function() {
+					// Call the chat method on the server
+					chat.server.send($('#msg').val());
+				});
+			});
 
-            $('#leftButton')
-                .on('touchstart', function() {
-                    chat.server.send('startLeft');
-                })
-                .on('touchend', function() {
-                    chat.server.send('endLeft');
-                });
-            
-            $('#rightButton')
-                .on('touchstart', function() {
-                    chat.server.send('startRight');
-                })
-                .on('touchend', function() {
-                    chat.server.send('endRight');
-                });
+			$('#leftButton')
+				.on('touchstart', function() {
+					chat.server.send('startLeft');
+				})
+				.on('touchend', function() {
+					chat.server.send('endLeft');
+				});
+			
+			$('#rightButton')
+				.on('touchstart', function() {
+					chat.server.send('startRight');
+				})
+				.on('touchend', function() {
+					chat.server.send('endRight');
+				});
+			
+			$('#upButton')
+				.on('touchstart', function ()
+				{
+					chat.server.send('startUp');
+				})
+				.on('touchend', function ()
+				{
+					chat.server.send('endUp');
+				});
+			
+			$('#downButton')
+				.on('touchstart', function ()
+				{
+					chat.server.send('startDown');
+				})
+				.on('touchend', function ()
+				{
+					chat.server.send('endDown');
+				});
 
-            $('#jumpButton')
-                .on('touchstart', function() {
-                    chat.server.send('jump');
-                });
+			$('#jumpButton')
+				.on('touchstart', function() {
+					chat.server.send('jump');
+				});
 
-            $('#enterButton').on('touchstart', function() {
-                chat.server.send('enter');
-            });
+			//$('#enterButton').on('touchstart', function() {
+			//	chat.server.send('enter');
+			//});
 
-            //window.addEventListener('deviceorientation', function(e) {
-            //    handleOrientationChange(e);
-            //});
+			//window.addEventListener('deviceorientation', function(e) {
+			//    handleOrientationChange(e);
+			//});
 
-            //window.addEventListener('devicemotion', function(e) {
-            //    handleDeviceMotion(e);
-            //});
+			//window.addEventListener('devicemotion', function(e) {
+			//    handleDeviceMotion(e);
+			//});
 
-            //setInterval(checkVerticalAcceleration, 100);
-        });
-        
-        // Deactivating distracting Text Selection:
-        // from: http://stackoverflow.com/questions/1794220/how-to-disable-mobilesafari-auto-selection
-        $.fn.extend({
-            disableSelection: function() {
-                this.each(function() {
-                    this.onselectstart = function() {
-                        return false;
-                    };
-                    this.unselectable = "on";
-                    $(this).css('-moz-user-select', 'none');
-                    $(this).css('-webkit-user-select', 'none');
-                });
-            }
-        });
+			//setInterval(checkVerticalAcceleration, 100);
+		});
+		
+		// Deactivating distracting Text Selection:
+		// from: http://stackoverflow.com/questions/1794220/how-to-disable-mobilesafari-auto-selection
+		$.fn.extend({
+			disableSelection: function() {
+				this.each(function() {
+					this.onselectstart = function() {
+						return false;
+					};
+					this.unselectable = "on";
+					$(this).css('-moz-user-select', 'none');
+					$(this).css('-webkit-user-select', 'none');
+				});
+			}
+		});
 
 
-        $(function() {
-            $(this).disableSelection();
-        });
+		$(function() {
+			$(this).disableSelection();
+		});
 
-    </script>
+	</script>
 }
